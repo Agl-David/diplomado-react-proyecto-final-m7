@@ -166,7 +166,7 @@ export const TaskPage = () => {
         </Stack>
       </Paper>
 
-      {/* LISTA */}
+      {/* LISTADO */}
       {loading ? (
         <CircularProgress />
       ) : (
@@ -201,7 +201,18 @@ export const TaskPage = () => {
                       />
                     ) : (
                       <>
-                        <Typography variant="h6">
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            textDecoration:
+                              estado
+                                ? 'line-through'
+                                : 'none',
+                            color: estado
+                              ? 'gray'
+                              : 'black',
+                          }}
+                        >
                           {texto}
                         </Typography>
 
@@ -250,14 +261,21 @@ export const TaskPage = () => {
                     ) : (
                       <>
                         <Button
-                          variant="outlined"
+                          variant="contained"
+                          color={
+                            estado
+                              ? 'warning'
+                              : 'success'
+                          }
                           onClick={() =>
                             cambiarEstado(
                               task
                             )
                           }
                         >
-                          Estado
+                          {estado
+                            ? 'Reabrir'
+                            : 'Finalizar'}
                         </Button>
 
                         <Button
