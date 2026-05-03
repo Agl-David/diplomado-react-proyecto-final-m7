@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# 📝 Proyecto Final: Gestión de Tareas con React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🎯 Objetivo
 
-Currently, two official plugins are available:
+Finalizar la aplicación de "Lista de Tareas" (To-Do List) desarrollada en clase, aplicando los conceptos de reactividad, componentes y manejo de eventos en React.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Funcionalidades implementadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+El sistema permite gestionar el ciclo de vida completo de una tarea:
 
-## Expanding the ESLint configuration
+### ✔ Visualización
+Listado dinámico de tareas con opciones de:
+- Ver tareas
+- Editar tareas
+- Cambiar estado
+- Eliminar tareas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+API:
+https://taskdone-node.onrender.com/api-docs/#/Tareas/get_api_tasks
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### ✔ Creación
+Permite agregar nuevas tareas mediante un formulario.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+API:
+https://taskdone-node.onrender.com/api-docs/#/Tareas/post_api_tasks
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### ✔ Edición
+Permite modificar el contenido de una tarea existente.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+API:
+https://taskdone-node.onrender.com/api-docs/#/Tareas/put_api_tasks__id_
+
+---
+
+### ✔ Eliminación
+Permite eliminar tareas individuales.
+
+API:
+https://taskdone-node.onrender.com/api-docs/#/Tareas/delete_api_tasks__id_
+
+---
+
+### ✔ Gestión de estado
+Permite alternar entre:
+- Pendiente
+- Finalizada
+
+Se muestra visualmente con colores (Chip UI).
+
+API:
+https://taskdone-node.onrender.com/api-docs/#/Tareas/patch_api_tasks__id_
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- React + TypeScript
+- Vite
+- React Router DOM
+- Material UI (MUI)
+- Axios
+- Zod
+- Context API
+
+---
+
+## 🔗 Backend utilizado
+
