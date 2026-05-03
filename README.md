@@ -6,55 +6,46 @@ Finalizar la aplicación de "Lista de Tareas" (To-Do List) desarrollada en clase
 
 ---
 
-## 🚀 Funcionalidades implementadas
+## 🚀 Funcionalidades del sistema
 
 El sistema permite gestionar el ciclo de vida completo de una tarea:
 
-### ✔ Visualización
-Listado dinámico de tareas con opciones de:
-- Ver tareas
-- Editar tareas
+Incluye:
+
+✔ Visualización de tareas en lista dinámica con opciones de:
+- Editar
 - Cambiar estado
-- Eliminar tareas
+- Eliminar
 
-API:
-https://taskdone-node.onrender.com/api-docs/#/Tareas/get_api_tasks
+✔ Creación de nuevas tareas mediante formulario
 
----
+✔ Edición de tareas existentes
 
-### ✔ Creación
-Permite agregar nuevas tareas mediante un formulario.
+✔ Eliminación de tareas individuales
 
-API:
-https://taskdone-node.onrender.com/api-docs/#/Tareas/post_api_tasks
-
----
-
-### ✔ Edición
-Permite modificar el contenido de una tarea existente.
-
-API:
-https://taskdone-node.onrender.com/api-docs/#/Tareas/put_api_tasks__id_
-
----
-
-### ✔ Eliminación
-Permite eliminar tareas individuales.
-
-API:
-https://taskdone-node.onrender.com/api-docs/#/Tareas/delete_api_tasks__id_
-
----
-
-### ✔ Gestión de estado
-Permite alternar entre:
+✔ Gestión de estado entre:
 - Pendiente
 - Finalizada
 
-Se muestra visualmente con colores (Chip UI).
+---
 
-API:
-https://taskdone-node.onrender.com/api-docs/#/Tareas/patch_api_tasks__id_
+## 🔗 API utilizada
+
+Backend del docente:
+
+https://taskdone-node.onrender.com
+
+Documentación:
+
+https://taskdone-node.onrender.com/api-docs
+
+Endpoints principales:
+
+- GET /tasks → listar tareas
+- POST /tasks → crear tarea
+- PUT /tasks/:id → editar tarea
+- PATCH /tasks/:id → cambiar estado
+- DELETE /tasks/:id → eliminar tarea
 
 ---
 
@@ -70,5 +61,15 @@ https://taskdone-node.onrender.com/api-docs/#/Tareas/patch_api_tasks__id_
 
 ---
 
-## 🔗 Backend utilizado
+## ⚙️ Instalación y ejecución
 
+```bash
+git clone https://github.com/Agl-David/diplomado-react-proyecto-final-m7.git
+npm install
+npm run dev
+
+Variables de entorno
+
+Crear archivo .env en la raíz:
+
+VITE_API_URL=https://taskdone-node.onrender.com/api
