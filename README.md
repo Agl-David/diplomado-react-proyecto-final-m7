@@ -73,3 +73,5 @@ Variables de entorno
 Crear archivo .env en la raíz:
 
 VITE_API_URL=https://taskdone-node.onrender.com/api
+
+## ALUMNO: DAVID ADRIAN AGUILAR LOZA
