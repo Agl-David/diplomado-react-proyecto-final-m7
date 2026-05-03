@@ -14,8 +14,10 @@ import { useAxios } from '../../hooks';
 
 interface Task {
   id: number;
-  name: string;
-  status: boolean;
+  name?: string;
+  title?: string;
+  status?: boolean;
+  done?: boolean;
 }
 
 export const TaskPage = () => {
@@ -25,13 +27,14 @@ export const TaskPage = () => {
   const [loading, setLoading] = useState(true);
   const [newTask, setNewTask] = useState('');
 
+  const [editId, setEditId] = useState<number | null>(null);
+  const [editText, setEditText] = useState('');
+
   const cargarTareas = async () => {
     try {
       setLoading(true);
 
       const response = await axios.get('/tasks');
-
-      console.log('API TASKS =>', response.data);
 
       const data = Array.isArray(response.data)
         ? response.data
@@ -39,7 +42,7 @@ export const TaskPage = () => {
 
       setTasks(data);
     } catch (error) {
-      console.error('Error cargando tareas:', error);
+      console.error(error);
       setTasks([]);
     } finally {
       setLoading(false);
@@ -55,14 +58,21 @@ export const TaskPage = () => {
 
     try {
       await axios.post('/tasks', {
-        name: newTask,
+        name: newTask.trim(),
       });
-
-      setNewTask('');
-      cargarTareas();
-    } catch (error) {
-      console.error('Error creando tarea:', error);
+    } catch {
+      try {
+        await axios.post('/tasks', {
+          title: newTask.trim(),
+        });
+      } catch (error) {
+        console.error(error);
+        return;
+      }
     }
+
+    setNewTask('');
+    cargarTareas();
   };
 
   const eliminarTarea = async (id: number) => {
@@ -75,15 +85,58 @@ export const TaskPage = () => {
   };
 
   const cambiarEstado = async (task: Task) => {
+    const actual =
+      task.status ?? task.done ?? false;
+
     try {
       await axios.patch(`/tasks/${task.id}`, {
-        status: !task.status,
+        done: !actual,
       });
-
-      cargarTareas();
-    } catch (error) {
-      console.error(error);
+    } catch {
+      try {
+        await axios.patch(`/tasks/${task.id}`, {
+          status: !actual,
+        });
+      } catch (error) {
+        console.error(error);
+        return;
+      }
     }
+
+    cargarTareas();
+  };
+
+  const iniciarEdicion = (task: Task) => {
+    setEditId(task.id);
+    setEditText(task.name || task.title || '');
+  };
+
+  const guardarEdicion = async () => {
+    if (!editText.trim() || editId === null) return;
+
+    try {
+      await axios.put(`/tasks/${editId}`, {
+        name: editText.trim(),
+      });
+    } catch {
+      try {
+        await axios.put(`/tasks/${editId}`, {
+          title: editText.trim(),
+        });
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+    }
+
+    setEditId(null);
+    setEditText('');
+    cargarTareas();
+  };
+
+  const cancelarEdicion = () => {
+    setEditId(null);
+    setEditText('');
   };
 
   return (
@@ -92,72 +145,150 @@ export const TaskPage = () => {
         Gestión de Tareas
       </Typography>
 
+      {/* CREAR */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Stack direction="row" spacing={2}>
           <TextField
             fullWidth
             label="Nueva tarea"
             value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
+            onChange={(e) =>
+              setNewTask(e.target.value)
+            }
           />
 
-          <Button variant="contained" onClick={crearTarea}>
+          <Button
+            variant="contained"
+            onClick={crearTarea}
+          >
             Agregar
           </Button>
         </Stack>
       </Paper>
 
+      {/* LISTA */}
       {loading ? (
         <CircularProgress />
       ) : (
         <Stack spacing={2}>
-          {tasks.map((task) => (
-            <Paper key={task.id} sx={{ p: 2 }}>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box>
-                  <Typography variant="h6">
-                    {task.name}
-                  </Typography>
+          {tasks.map((task) => {
+            const texto =
+              task.name || task.title || '';
 
-                  <Chip
-                    label={
-                      task.status
-                        ? 'Finalizada'
-                        : 'Pendiente'
-                    }
-                    color={
-                      task.status
-                        ? 'success'
-                        : 'warning'
-                    }
-                    size="small"
-                    sx={{ mt: 1 }}
-                  />
+            const estado =
+              task.status ?? task.done ?? false;
+
+            const editando =
+              editId === task.id;
+
+            return (
+              <Paper key={task.id} sx={{ p: 2 }}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Box sx={{ width: '60%' }}>
+                    {editando ? (
+                      <TextField
+                        fullWidth
+                        value={editText}
+                        onChange={(e) =>
+                          setEditText(
+                            e.target.value
+                          )
+                        }
+                      />
+                    ) : (
+                      <>
+                        <Typography variant="h6">
+                          {texto}
+                        </Typography>
+
+                        <Chip
+                          label={
+                            estado
+                              ? 'Finalizada'
+                              : 'Pendiente'
+                          }
+                          color={
+                            estado
+                              ? 'success'
+                              : 'warning'
+                          }
+                          size="small"
+                          sx={{ mt: 1 }}
+                        />
+                      </>
+                    )}
+                  </Box>
+
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                  >
+                    {editando ? (
+                      <>
+                        <Button
+                          variant="contained"
+                          onClick={
+                            guardarEdicion
+                          }
+                        >
+                          Guardar
+                        </Button>
+
+                        <Button
+                          color="inherit"
+                          onClick={
+                            cancelarEdicion
+                          }
+                        >
+                          Cancelar
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            cambiarEstado(
+                              task
+                            )
+                          }
+                        >
+                          Estado
+                        </Button>
+
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            iniciarEdicion(
+                              task
+                            )
+                          }
+                        >
+                          Editar
+                        </Button>
+
+                        <Button
+                          color="error"
+                          variant="contained"
+                          onClick={() =>
+                            eliminarTarea(
+                              task.id
+                            )
+                          }
+                        >
+                          Eliminar
+                        </Button>
+                      </>
+                    )}
+                  </Stack>
                 </Box>
-
-                <Stack direction="row" spacing={1}>
-                  <Button
-                    variant="outlined"
-                    onClick={() => cambiarEstado(task)}
-                  >
-                    Estado
-                  </Button>
-
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => eliminarTarea(task.id)}
-                  >
-                    Eliminar
-                  </Button>
-                </Stack>
-              </Box>
-            </Paper>
-          ))}
+              </Paper>
+            );
+          })}
         </Stack>
       )}
     </Container>
