@@ -121,7 +121,7 @@ export const TaskPage = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" mb={3}>
+      <Typography variant="h4" sx={{ mb: 3 }}>
         Gestión de Tareas
       </Typography>
 
@@ -153,12 +153,13 @@ export const TaskPage = () => {
             return (
               <Paper key={task.id} sx={{ p: 2 }}>
                 <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
                 >
                   <Box>
-
                     {/* EDIT MODE */}
                     {editingId === task.id ? (
                       <TextField
